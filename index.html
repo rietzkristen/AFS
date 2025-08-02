@@ -282,20 +282,81 @@
     }
 
     function exportSummaryToCSV() {
-      const tables = document.querySelectorAll('#summarySection table');
-      if (!tables.length) {
-        alert('No summary to export');
-        return;
-      }
+      /*
+        Build a CSV export containing:
+        1. Order-level details from the top of the form.
+        2. A table of each athlete with their size, quantity and nude color selections per item.
+        3. A summary of sizes per item (the same as the on‑page summary).  
+        This ensures the exported CSV includes all relevant information for recreating the Fit Sheet in a spreadsheet.
+      */
+
+      // Collect top-level order details
+      const accountManager = document.getElementById('accountManager').value.trim();
+      const accountName    = document.getElementById('gymCompany').value.trim();
+      const contactName    = document.getElementById('coachOwner').value.trim();
+      const orderDate      = document.getElementById('orderDate').value;
+      const eventDate      = document.getElementById('eventDate').value;
+      const oppId          = document.getElementById('sfOpportunityId').value.trim();
+      const orderDesc      = document.getElementById('orderDescription').value.trim();
+      const artFileInput   = document.getElementById('artApprovalPdf');
+      const artFileName    = artFileInput && artFileInput.files && artFileInput.files[0] ? artFileInput.files[0].name : '';
+
       let csv = '';
-      tables.forEach((table, idx) => {
-        csv += 'Item ' + (idx + 1) + '\n';
+      // Append order details as key,value lines
+      csv += 'Account Manager,"' + accountManager + '"\n';
+      csv += 'Account,"' + accountName + '"\n';
+      csv += 'Contact,"' + contactName + '"\n';
+      csv += 'Date,"' + orderDate + '"\n';
+      csv += 'Event Date,"' + eventDate + '"\n';
+      csv += 'Salesforce Opportunity Link,"' + oppId + '"\n';
+      csv += 'Art Approval PDF,"' + artFileName + '"\n';
+      csv += 'Order Description,"' + orderDesc + '"\n\n';
+
+      // Build athlete header row
+      const header = ['Athlete Name'];
+      for (let i = 1; i <= 4; i++) {
+        header.push('Item ' + i + ' Size');
+        header.push('Item ' + i + ' Qty');
+        header.push('Item ' + i + ' Nude Color');
+      }
+      csv += header.map(h => '"' + h + '"').join(',') + '\n';
+
+      // Gather athlete rows
+      const bodyRows = document.querySelectorAll('#athletesTbody tr');
+      bodyRows.forEach(row => {
+        const inputs = row.querySelectorAll('td input');
+        const rowVals = [];
+        // Athlete name
+        rowVals.push(inputs[0].value.trim());
+        let offset = 1;
+        for (let i = 1; i <= 4; i++) {
+          const nudeColor = inputs[offset].value.trim();
+          const size      = inputs[offset + 1].value.trim();
+          const qtyVal    = inputs[offset + 2].value.trim();
+          rowVals.push(size);
+          rowVals.push(qtyVal);
+          rowVals.push(nudeColor);
+          offset += 3;
+        }
+        csv += rowVals.map(v => '"' + v + '"').join(',') + '\n';
+      });
+      csv += '\n';
+
+      // Ensure summary is computed
+      if (!document.querySelectorAll('#summarySection table').length) {
+        computeSummary();
+      }
+      // Append size summary tables
+      const summaryTables = document.querySelectorAll('#summarySection table');
+      summaryTables.forEach((table, idx) => {
+        csv += 'Item ' + (idx + 1) + ' Summary\n';
         table.querySelectorAll('tr').forEach(tr => {
-          const row = Array.from(tr.querySelectorAll('th, td')).map(td => '"' + td.innerText + '"').join(',');
-          csv += row + '\n';
+          const rowData = Array.from(tr.querySelectorAll('th, td')).map(td => '"' + td.innerText + '"').join(',');
+          csv += rowData + '\n';
         });
         csv += '\n';
       });
+      // Create and trigger download
       const blob = new Blob([csv], { type: 'text/csv' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
