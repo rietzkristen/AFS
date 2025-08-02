@@ -277,8 +277,13 @@
         }
       });
       let html = '<h3>Size Summary</h3>';
+      // For each item summary, use the custom label instead of generic "Item i".
       for (const item in summary) {
-        html += `<h4>Item ${item}</h4><table><tr><th>Size</th><th>Total Qty</th></tr>`;
+        const idx = parseInt(item);
+        const num  = document.getElementById('item' + idx + 'Number').value.trim();
+        const desc = document.getElementById('item' + idx + 'Desc').value.trim();
+        const label = (desc || num) ? ((desc && num) ? `${desc} (${num})` : (desc || num)) : `Item ${idx}`;
+        html += `<h4>${label}</h4><table><tr><th>Size</th><th>Total Qty</th></tr>`;
         for (const size in summary[item]) {
           html += `<tr><td>${size}</td><td>${summary[item][size]}</td></tr>`;
         }
@@ -319,20 +324,38 @@
       csv += 'Art Approval PDF,"' + artFileName + '"\n';
       csv += 'Order Description,"' + orderDesc + '"\n\n';
 
-      // Ensure summary is computed
-      if (!document.querySelectorAll('#summarySection table').length) {
-        computeSummary();
-      }
-      // Append size summary tables before listing athletes
-      const summaryTables = document.querySelectorAll('#summarySection table');
-      summaryTables.forEach((table, idx) => {
-        csv += 'Item ' + (idx + 1) + ' Summary\n';
-        table.querySelectorAll('tr').forEach(tr => {
-          const rowData = Array.from(tr.querySelectorAll('th, td')).map(td => '"' + td.innerText + '"').join(',');
-          csv += rowData + '\n';
-        });
-        csv += '\n';
+      // Ensure the on-page summary is up to date
+      computeSummary();
+      // Recompute summary data locally so we can output custom labels in the CSV. This avoids relying on DOM tables.
+      const summaryData = {};
+      const athRows = document.querySelectorAll('#athletesTbody tr');
+      athRows.forEach(row => {
+        const cells = row.querySelectorAll('td input');
+        let offset = 1;
+        for (let i = 1; i <= 4; i++) {
+          offset++; // skip nude color cell
+          const size = cells[offset].value.trim();
+          const qty = parseInt(cells[offset + 1].value, 10) || 0;
+          if (size) {
+            if (!summaryData[i]) summaryData[i] = {};
+            summaryData[i][size] = (summaryData[i][size] || 0) + qty;
+          }
+          offset += 2;
+        }
       });
+      // Append summary using custom item labels
+      for (let i = 1; i <= 4; i++) {
+        if (!summaryData[i]) continue;
+        const num = document.getElementById('item' + i + 'Number').value.trim();
+        const desc = document.getElementById('item' + i + 'Desc').value.trim();
+        const label = (desc || num) ? ((desc && num) ? `${desc} (${num})` : (desc || num)) : `Item ${i}`;
+        csv += label + ' Summary\n';
+        csv += '"Size","Total Qty"\n';
+        for (const size in summaryData[i]) {
+          csv += '"' + size + '","' + summaryData[i][size] + '"\n';
+        }
+        csv += '\n';
+      }
 
       // Build athlete header row after summaries using custom item labels
       const header = ['Athlete Name'];
