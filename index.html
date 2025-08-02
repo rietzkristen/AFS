@@ -312,7 +312,22 @@
       csv += 'Art Approval PDF,"' + artFileName + '"\n';
       csv += 'Order Description,"' + orderDesc + '"\n\n';
 
-      // Build athlete header row
+      // Ensure summary is computed
+      if (!document.querySelectorAll('#summarySection table').length) {
+        computeSummary();
+      }
+      // Append size summary tables before listing athletes
+      const summaryTables = document.querySelectorAll('#summarySection table');
+      summaryTables.forEach((table, idx) => {
+        csv += 'Item ' + (idx + 1) + ' Summary\n';
+        table.querySelectorAll('tr').forEach(tr => {
+          const rowData = Array.from(tr.querySelectorAll('th, td')).map(td => '"' + td.innerText + '"').join(',');
+          csv += rowData + '\n';
+        });
+        csv += '\n';
+      });
+
+      // Build athlete header row after summaries
       const header = ['Athlete Name'];
       for (let i = 1; i <= 4; i++) {
         header.push('Item ' + i + ' Size');
@@ -341,21 +356,6 @@
         csv += rowVals.map(v => '"' + v + '"').join(',') + '\n';
       });
       csv += '\n';
-
-      // Ensure summary is computed
-      if (!document.querySelectorAll('#summarySection table').length) {
-        computeSummary();
-      }
-      // Append size summary tables
-      const summaryTables = document.querySelectorAll('#summarySection table');
-      summaryTables.forEach((table, idx) => {
-        csv += 'Item ' + (idx + 1) + ' Summary\n';
-        table.querySelectorAll('tr').forEach(tr => {
-          const rowData = Array.from(tr.querySelectorAll('th, td')).map(td => '"' + td.innerText + '"').join(',');
-          csv += rowData + '\n';
-        });
-        csv += '\n';
-      });
       // Create and trigger download
       const blob = new Blob([csv], { type: 'text/csv' });
       const link = document.createElement('a');
