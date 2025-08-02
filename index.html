@@ -243,12 +243,19 @@
 
     function updateItemHeaders() {
       const headers = document.querySelectorAll('#athletesTable thead tr th.itemHeader');
+      // Update the headers for each item using the custom number/description. Each item has two itemHeader columns (Size and Qty).
       for (let i = 1; i <= 4; i++) {
         const num = document.getElementById('item' + i + 'Number').value.trim();
         const desc = document.getElementById('item' + i + 'Desc').value.trim();
-        const label = (desc || num) ? ((desc && num) ? desc + ' (' + num + ')' : (desc || num)) : 'Item ' + i;
-        headers[(i - 1) * 3].innerText = label + ' Size';
-        headers[(i - 1) * 3 + 1].innerText = 'Qty';
+        const label = (desc || num) ? ((desc && num) ? `${desc} (${num})` : (desc || num)) : `Item ${i}`;
+        // Update nude color header text
+        const nudeHeader = document.querySelector('.nudeHeader' + i);
+        if (nudeHeader) {
+          nudeHeader.innerText = label + ' Nude Color';
+        }
+        // Update size and quantity headers. There are two itemHeader elements per item.
+        headers[(i - 1) * 2].innerText = label + ' Size';
+        headers[(i - 1) * 2 + 1].innerText = label + ' Qty';
       }
     }
 
@@ -327,12 +334,15 @@
         csv += '\n';
       });
 
-      // Build athlete header row after summaries
+      // Build athlete header row after summaries using custom item labels
       const header = ['Athlete Name'];
       for (let i = 1; i <= 4; i++) {
-        header.push('Item ' + i + ' Size');
-        header.push('Item ' + i + ' Qty');
-        header.push('Item ' + i + ' Nude Color');
+        const num = document.getElementById('item' + i + 'Number').value.trim();
+        const desc = document.getElementById('item' + i + 'Desc').value.trim();
+        const label = (desc || num) ? ((desc && num) ? `${desc} (${num})` : (desc || num)) : `Item ${i}`;
+        header.push(label + ' Size');
+        header.push(label + ' Qty');
+        header.push(label + ' Nude Color');
       }
       csv += header.map(h => '"' + h + '"').join(',') + '\n';
 
