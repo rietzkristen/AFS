@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <!-- Font imports -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Oswald:wght@400&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Monument:wght@400&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Monument:wght@400&family=Oswald:wght@400&display=swap" rel="stylesheet"/>
   <style>
     /* Branding fonts */
     body, label, input, table, th, td, button {
@@ -11,7 +10,7 @@
       font-weight: 400;
     }
     h1 {
-      font-family: 'Montserrat', sans-serif !important;
+      font-family: 'Montserrat', sans-serif;
       font-weight: normal !important;
       font-style: normal !important;
       letter-spacing: normal !important;
@@ -22,107 +21,148 @@
       letter-spacing: 0.1em;
     }
   </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fit Sheet App - Per Item Nude Color</title>
+  <style>
+    /* Layout and styling for improved appearance */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #4c2e83;
+      color: white;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: white;
+      color: black;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 6px;
+    }
+    th {
+      background: #eee;
+    }
+    input[type="text"], input[type="number"] {
+      width: 95%;
+      padding: 3px;
+    }
+    button {
+      margin: 10px 0;
+      padding: 6px 12px;
+      background: #4c2e83;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #3b2268;
+    }
+    .hidden {
+      display: none;
+    }
+    .new-row-highlight {
+      background: #d1c4e9;
+    }
+  </style>
 </head>
-<body style="background-color:#4c2e83; color:white;">
-  <!-- Rebel logo -->
+<body>
   <div style="text-align:center; margin-bottom:10px;">
-    <img src="rebel-mark-WHITE.png" alt="Rebel Logo" style="max-height:100px; width:auto;">
+    <img src="rebel-mark-WHITE.png" alt="Rebel Star Logo" style="max-height:100px; margin-bottom:10px;" />
   </div>
-
   <h1>ATHLETE FIT SHEET</h1>
-
-  <!-- Order Details -->
   <h3>Order Details</h3>
   <table>
     <tr>
       <th>Account Manager</th>
-      <td><input type="text" id="accountManager"></td>
+      <td><input type="text" id="accountManager" /></td>
     </tr>
     <tr>
       <th>Account</th>
-      <td><input type="text" id="gymCompany"></td>
+      <td><input type="text" id="gymCompany" /></td>
       <th>Contact</th>
-      <td><input type="text" id="coachOwner"></td>
+      <td><input type="text" id="coachOwner" /></td>
     </tr>
     <tr>
       <th>Date</th>
-      <td><input type="date" id="orderDate"></td>
+      <td><input type="date" id="orderDate" /></td>
       <th>Event Date</th>
-      <td><input type="date" id="eventDate"></td>
+      <td><input type="date" id="eventDate" /></td>
     </tr>
     <tr>
       <th>Salesforce Opportunity Link</th>
       <td colspan="3">
-        <input type="text" id="sfOpportunityId" placeholder="Salesforce Opportunity ID" oninput="updateOpportunityLink()">
+        <input type="text" id="sfOpportunityId" placeholder="Salesforce Opportunity ID" oninput="updateOpportunityLink()" />
         <div id="sfLinkDisplay" style="margin-top:5px;"></div>
       </td>
     </tr>
     <tr>
       <th>Art Approval PDF</th>
       <td colspan="3">
-        <input type="file" id="artApprovalPdf" accept="application/pdf">
+        <input type="file" id="artApprovalPdf" accept="application/pdf" />
         <div id="pdfFileName" style="margin-top:5px;"></div>
       </td>
     </tr>
     <tr>
       <th>Order Description</th>
-      <td colspan="3"><input type="text" id="orderDescription"></td>
+      <td colspan="3"><input type="text" id="orderDescription" /></td>
     </tr>
   </table>
-
-  <!-- Items section -->
   <h3>Items (Up to 4)</h3>
   <table id="itemsTable">
     <thead>
       <tr>
         <th>Item #</th>
         <th>Description</th>
-        <th>Include Nude Color Selection</th>
+        <th>Include Nude Color</th>
         <th>Image</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><input type="text" id="item1Number" oninput="updateItemHeaders()"></td>
-        <td><input type="text" id="item1Desc" oninput="updateItemHeaders()"></td>
-        <td style="text-align:center;"><input type="checkbox" id="nudeItem1" onchange="toggleNudeColor(1)"></td>
+        <td><input type="text" id="item1Number" oninput="updateItemHeaders()" /></td>
+        <td><input type="text" id="item1Desc" oninput="updateItemHeaders()" /></td>
+        <td style="text-align:center;"><input type="checkbox" id="nudeItem1" onchange="toggleNudeColor(1)" /></td>
         <td>
-          <input type="file" id="item1Image" accept="image/*" onchange="previewItemImage(1)">
+          <input type="file" id="item1Image" accept="image/*" onchange="previewItemImage(1)" />
           <div id="item1ImagePreview" style="margin-top:5px;"></div>
         </td>
       </tr>
       <tr>
-        <td><input type="text" id="item2Number" oninput="updateItemHeaders()"></td>
-        <td><input type="text" id="item2Desc" oninput="updateItemHeaders()"></td>
-        <td style="text-align:center;"><input type="checkbox" id="nudeItem2" onchange="toggleNudeColor(2)"></td>
+        <td><input type="text" id="item2Number" oninput="updateItemHeaders()" /></td>
+        <td><input type="text" id="item2Desc" oninput="updateItemHeaders()" /></td>
+        <td style="text-align:center;"><input type="checkbox" id="nudeItem2" onchange="toggleNudeColor(2)" /></td>
         <td>
-          <input type="file" id="item2Image" accept="image/*" onchange="previewItemImage(2)">
+          <input type="file" id="item2Image" accept="image/*" onchange="previewItemImage(2)" />
           <div id="item2ImagePreview" style="margin-top:5px;"></div>
         </td>
       </tr>
       <tr>
-        <td><input type="text" id="item3Number" oninput="updateItemHeaders()"></td>
-        <td><input type="text" id="item3Desc" oninput="updateItemHeaders()"></td>
-        <td style="text-align:center;"><input type="checkbox" id="nudeItem3" onchange="toggleNudeColor(3)"></td>
+        <td><input type="text" id="item3Number" oninput="updateItemHeaders()" /></td>
+        <td><input type="text" id="item3Desc" oninput="updateItemHeaders()" /></td>
+        <td style="text-align:center;"><input type="checkbox" id="nudeItem3" onchange="toggleNudeColor(3)" /></td>
         <td>
-          <input type="file" id="item3Image" accept="image/*" onchange="previewItemImage(3)">
+          <input type="file" id="item3Image" accept="image/*" onchange="previewItemImage(3)" />
           <div id="item3ImagePreview" style="margin-top:5px;"></div>
         </td>
       </tr>
       <tr>
-        <td><input type="text" id="item4Number" oninput="updateItemHeaders()"></td>
-        <td><input type="text" id="item4Desc" oninput="updateItemHeaders()"></td>
-        <td style="text-align:center;"><input type="checkbox" id="nudeItem4" onchange="toggleNudeColor(4)"></td>
+        <td><input type="text" id="item4Number" oninput="updateItemHeaders()" /></td>
+        <td><input type="text" id="item4Desc" oninput="updateItemHeaders()" /></td>
+        <td style="text-align:center;"><input type="checkbox" id="nudeItem4" onchange="toggleNudeColor(4)" /></td>
         <td>
-          <input type="file" id="item4Image" accept="image/*" onchange="previewItemImage(4)">
+          <input type="file" id="item4Image" accept="image/*" onchange="previewItemImage(4)" />
           <div id="item4ImagePreview" style="margin-top:5px;"></div>
         </td>
       </tr>
     </tbody>
   </table>
-
-  <!-- Athletes section -->
-  <h3>Athletes</h3>
   <table id="athletesTable">
     <thead>
       <tr>
@@ -144,17 +184,129 @@
     </thead>
     <tbody id="athletesTbody"></tbody>
   </table>
-
-  <!-- Action buttons -->
-  <button id="addAthleteBtn" type="button">Add Athlete</button>
-  <button id="summaryBtn" type="button">Compute Summary</button>
-  <button id="exportCsvBtn" type="button">Export CSV</button>
-
-  <!-- Summary display -->
+  <button type="button" id="addAthleteBtn">Add Athlete</button>
+  <button type="button" id="summaryBtn">Compute Summary</button>
+  <button type="button" id="exportCsvBtn">Export CSV</button>
   <section id="summarySection"></section>
 
   <script>
-    // Salesforce link updater
+    function toggleNudeColor(itemIndex) {
+      const header = document.querySelector('.nudeHeader' + itemIndex);
+      const show = document.getElementById('nudeItem' + itemIndex).checked;
+      header.classList.toggle('hidden', !show);
+      const rows = document.querySelectorAll('#athletesTbody tr');
+      rows.forEach(row => {
+        const cell = row.querySelector('.nudeCell' + itemIndex);
+        if (cell) cell.classList.toggle('hidden', !show);
+      });
+    }
+
+    function addAthleteRow() {
+      const tbody = document.getElementById('athletesTbody');
+      const row = document.createElement('tr');
+
+      function createCell(type = 'text', cls = '') {
+        const td = document.createElement('td');
+        if (cls) td.classList.add(cls);
+        const input = document.createElement('input');
+        input.type = type;
+        if (type === 'number') input.min = 0;
+        td.appendChild(input);
+        return td;
+      }
+
+      // Athlete Name
+      row.appendChild(createCell('text'));
+
+      // For each item: Nude, Size, Qty
+      for (let i = 1; i <= 4; i++) {
+        const nudeCell = createCell('text', 'nudeCell' + i);
+        if (!document.getElementById('nudeItem' + i).checked) nudeCell.classList.add('hidden');
+        row.appendChild(nudeCell);
+        row.appendChild(createCell('text'));
+        row.appendChild(createCell('number'));
+      }
+
+      // Remove button
+      const removeTd = document.createElement('td');
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = 'X';
+      removeBtn.type = 'button';
+      removeBtn.onclick = () => tbody.removeChild(row);
+      removeTd.appendChild(removeBtn);
+      row.appendChild(removeTd);
+
+      tbody.appendChild(row);
+      row.classList.add('new-row-highlight');
+      setTimeout(() => row.classList.remove('new-row-highlight'), 2000);
+    }
+
+    function updateItemHeaders() {
+      const headers = document.querySelectorAll('#athletesTable thead tr th.itemHeader');
+      for (let i = 1; i <= 4; i++) {
+        const num = document.getElementById('item' + i + 'Number').value.trim();
+        const desc = document.getElementById('item' + i + 'Desc').value.trim();
+        const label = (desc || num) ? ((desc && num) ? desc + ' (' + num + ')' : (desc || num)) : 'Item ' + i;
+        headers[(i - 1) * 3].innerText = label + ' Size';
+        headers[(i - 1) * 3 + 1].innerText = 'Qty';
+      }
+    }
+
+    function computeSummary() {
+      const rows = document.querySelectorAll('#athletesTbody tr');
+      const summary = {};
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td input');
+        let offset = 1;
+        for (let i = 1; i <= 4; i++) {
+          offset++;
+          const size = cells[offset].value.trim();
+          const qty = parseInt(cells[offset + 1].value, 10) || 0;
+          if (size) {
+            if (!summary[i]) summary[i] = {};
+            summary[i][size] = (summary[i][size] || 0) + qty;
+          }
+          offset += 2;
+        }
+      });
+      let html = '<h3>Size Summary</h3>';
+      for (const item in summary) {
+        html += `<h4>Item ${item}</h4><table><tr><th>Size</th><th>Total Qty</th></tr>`;
+        for (const size in summary[item]) {
+          html += `<tr><td>${size}</td><td>${summary[item][size]}</td></tr>`;
+        }
+        html += '</table>';
+      }
+      if (!rows.length) html += '<p>No athlete data available.</p>';
+      document.getElementById('summarySection').innerHTML = html;
+    }
+
+    function exportSummaryToCSV() {
+      const tables = document.querySelectorAll('#summarySection table');
+      if (!tables.length) {
+        alert('No summary to export');
+        return;
+      }
+      let csv = '';
+      tables.forEach((table, idx) => {
+        csv += 'Item ' + (idx + 1) + '\n';
+        table.querySelectorAll('tr').forEach(tr => {
+          const row = Array.from(tr.querySelectorAll('th, td')).map(td => '"' + td.innerText + '"').join(',');
+          csv += row + '\n';
+        });
+        csv += '\n';
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'fit_sheet_summary.csv';
+      link.click();
+    }
+
+    document.getElementById('addAthleteBtn').addEventListener('click', addAthleteRow);
+    document.getElementById('summaryBtn').addEventListener('click', computeSummary);
+    document.getElementById('exportCsvBtn').addEventListener('click', exportSummaryToCSV);
+
     function updateOpportunityLink() {
       const input = document.getElementById('sfOpportunityId');
       const val = input.value.trim();
@@ -171,8 +323,7 @@
       }
     }
 
-    // PDF upload preview
-    document.getElementById('artApprovalPdf').addEventListener('change', function() {
+    document.getElementById('artApprovalPdf').addEventListener('change', function () {
       const fileDiv = document.getElementById('pdfFileName');
       fileDiv.innerHTML = '';
       if (this.files && this.files[0]) {
@@ -187,7 +338,6 @@
       }
     });
 
-    // Image previews
     function previewItemImage(index) {
       const input = document.getElementById('item' + index + 'Image');
       const previewDiv = document.getElementById('item' + index + 'ImagePreview');
@@ -197,146 +347,13 @@
         img.style.maxHeight = '60px';
         img.style.marginLeft = '10px';
         const reader = new FileReader();
-        reader.onload = e => {
+        reader.onload = function (e) {
           img.src = e.target.result;
           previewDiv.appendChild(img);
         };
         reader.readAsDataURL(input.files[0]);
       }
     }
-
-    // Toggle per-item nude color columns
-    function toggleNudeColor(i) {
-      const show = document.getElementById('nudeItem' + i).checked;
-      document.querySelector('.nudeHeader' + i).classList.toggle('hidden', !show);
-      document.querySelectorAll('#athletesTbody tr').forEach(row => {
-        const cell = row.querySelector('.nudeCell' + i);
-        if (cell) cell.classList.toggle('hidden', !show);
-      });
-    }
-
-    // Add athlete row
-    function addAthleteRow() {
-      const tbody = document.getElementById('athletesTbody');
-      const row = document.createElement('tr');
-      function createCell(type, cls) {
-        const td = document.createElement('td');
-        if (cls) td.classList.add(cls);
-        const input = document.createElement('input');
-        input.type = type;
-        if (type === 'number') input.min = 0;
-        td.appendChild(input);
-        return td;
-      }
-      row.appendChild(createCell('text')); // Name
-      for (let i = 1; i <= 4; i++) {
-        const nude = createCell('text', 'nudeCell' + i);
-        if (!document.getElementById('nudeItem' + i).checked) nude.classList.add('hidden');
-        row.appendChild(nude);
-        row.appendChild(createCell('text'));
-        row.appendChild(createCell('number'));
-      }
-      const removeTd = document.createElement('td');
-      const btn = document.createElement('button');
-      btn.textContent = 'X';
-      btn.type = 'button';
-      btn.onclick = () => tbody.removeChild(row);
-      removeTd.appendChild(btn);
-      row.appendChild(removeTd);
-      tbody.appendChild(row);
-      row.classList.add('new-row-highlight');
-      setTimeout(() => row.classList.remove('new-row-highlight'), 2000);
-    }
-
-    // Update item headers & visibility
-    function updateItemHeaders() {
-      const rows = document.querySelectorAll('#athletesTbody tr');
-      for (let i = 1; i <= 4; i++) {
-        const num = document.getElementById('item' + i + 'Number').value.trim();
-        const desc = document.getElementById('item' + i + 'Desc').value.trim();
-        const label = (desc || num) ? (desc && num ? `${desc} (${num})` : desc || num) : '';
-        const nudeH = document.querySelector('.nudeHeader' + i);
-        const sizeH = document.querySelectorAll('.itemHeader')[(i - 1) * 3];
-        const qtyH  = document.querySelectorAll('.itemHeader')[(i - 1) * 3 + 1];
-        if (label) {
-          sizeH.innerText = `${label} Size`;
-          qtyH.innerText  = 'Qty';
-          sizeH.classList.remove('hidden');
-          qtyH.classList.remove('hidden');
-          if (document.getElementById('nudeItem' + i).checked) nudeH.classList.remove('hidden');
-          rows.forEach(r => {
-            const cells = r.querySelectorAll('td');
-            const base  = 1 + (i - 1) * 3;
-            if (document.getElementById('nudeItem' + i).checked) cells[base].classList.remove('hidden');
-            cells[base + 1].classList.remove('hidden');
-            cells[base + 2].classList.remove('hidden');
-          });
-        } else {
-          sizeH.classList.add('hidden');
-          qtyH.classList.add('hidden');
-          nudeH.classList.add('hidden');
-          rows.forEach(r => {
-            const cells = r.querySelectorAll('td');
-            const base  = 1 + (i - 1) * 3;
-            cells[base].classList.add('hidden');
-            cells[base + 1].classList.add('hidden');
-            cells[base + 2].classList.add('hidden');
-          });
-        }
-      }
-    }
-
-    // Compute summary
-    function computeSummary() {
-      const rows = document.querySelectorAll('#athletesTbody tr');
-      const summary = {};
-      rows.forEach(r => {
-        const inputs = r.querySelectorAll('td input');
-        let offset = 1;
-        for (let i = 1; i <= 4; i++) {
-          offset++; // nude
-          const size = inputs[offset].value.trim();
-          const qty  = parseInt(inputs[offset + 1].value, 10) || 0;
-          if (size) summary[i] = summary[i] || {}, summary[i][size] = (summary[i][size] || 0) + qty;
-          offset += 2;
-        }
-      });
-      let html = '<h3>Size Summary</h3>';
-      Object.keys(summary).forEach(item => {
-        html += `<h4>Item ${item}</h4><table><tr><th>Size</th><th>Total Qty</th></tr>`;
-        Object.keys(summary[item]).sort().forEach(sz => {
-          html += `<tr><td>${sz}</td><td>${summary[item][sz]}</td></tr>`;
-        });
-        html += '</table>';
-      });
-      if (!rows.length) html += '<p>No athlete data available.</p>';
-      document.getElementById('summarySection').innerHTML = html;
-    }
-
-    // Export CSV
-    function exportSummaryToCSV() {
-      const tables = document.querySelectorAll('#summarySection table');
-      if (!tables.length) return alert('No summary to export');
-      let csv = '';
-      tables.forEach((tbl, idx) => {
-        csv += `Item ${idx + 1}\n`;
-        tbl.querySelectorAll('tr').forEach(tr => {
-          const row = Array.from(tr.querySelectorAll('th, td')).map(td => `"${td.innerText}"`).join(',');
-          csv += row + '\n';
-        });
-        csv += '\n';
-      });
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'fit_sheet_summary.csv';
-      link.click();
-    }
-
-    // Attach event listeners
-    document.getElementById('addAthleteBtn').addEventListener('click', addAthleteRow);
-    document.getElementById('summaryBtn').addEventListener('click', computeSummary);
-    document.getElementById('exportCsvBtn').addEventListener('click', exportSummaryToCSV);
   </script>
 </body>
 </html>
