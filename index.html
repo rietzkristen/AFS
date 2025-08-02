@@ -389,11 +389,26 @@
         csv += rowVals.map(v => '"' + v + '"').join(',') + '\n';
       });
       csv += '\n';
-      // Create and trigger download
+      // Create and trigger download with dynamic filename
       const blob = new Blob([csv], { type: 'text/csv' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = 'fit_sheet_summary.csv';
+      // Build a descriptive filename: AFS_<AccountName>_<ItemNumbers>_<YYYY-MM-DD>.csv
+      const acct = document.getElementById('gymCompany').value.trim().replace(/\s+/g, '');
+      const itemNums = [];
+      for (let i = 1; i <= 4; i++) {
+        const num = document.getElementById('item' + i + 'Number').value.trim();
+        if (num) itemNums.push(num.replace(/\s+/g, ''));
+      }
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+      let fileName = 'AFS_' + (acct || 'Unknown');
+      if (itemNums.length) fileName += '_' + itemNums.join('_');
+      fileName += '_' + dateStr + '.csv';
+      link.download = fileName;
       link.click();
     }
 
